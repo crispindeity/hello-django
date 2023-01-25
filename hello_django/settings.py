@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 import environ
+import pymysql
 from pathlib import Path
 
 environ.Env
@@ -79,12 +80,17 @@ WSGI_APPLICATION = "hello_django.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+pymysql.install_as_MySQLdb()
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
+        "HOST": "localhost",
         "NAME": "hidjango",
         "USER": "crispin",
-        "PASSWORD":
+        "PASSWORD": "Mysql1!",
+        "PORT": "3306",
+        "OPTIONS": {"charset": "utf8mb4"},
     }
 }
 
@@ -111,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ko-kr"
 
 TIME_ZONE = "UTC"
 
