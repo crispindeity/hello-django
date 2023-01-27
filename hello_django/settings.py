@@ -11,20 +11,24 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 import os
-import environ
 import pymysql
 from pathlib import Path
-
-environ.Env
+from environ import Env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = Env()
+env_path = BASE_DIR / ".env"
+if env_path.exists():
+    with env_path.open("rt", encoding="utf8") as r:
+        env.read_env(r, overrides=True)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-8!txsfzu%e(u+!d-kre!^oby4^@8x-!#y4lu2d#9!%qx_kfjp#"
+SECRET_KEY = env.str("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -88,11 +92,11 @@ pymysql.install_as_MySQLdb()
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "HOST": "localhost",
-        "NAME": "hidjango",
-        "USER": "crispin",
-        "PASSWORD": "Mysql1!",
-        "PORT": "3306",
+        "HOST": env.str("DATABASE_HOST"),
+        "NAME": env.str("DATABASE_NAME"),
+        "USER": env.str("DATABASE_USER"),
+        "PASSWORD": env.str("DATABASE_PASSWORD"),
+        "PORT": env.int("DATABASE_PORT"),
         "OPTIONS": {"charset": "utf8mb4"},
     }
 }
@@ -138,3 +142,12 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# smtp 설정
+EMAIL_HOST = env.str("EMAIL_HOST")
+EMAIL_PORT = env.int("EMAIL_PORT")
+EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL")
+EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")
+
+DEFAULT_FROM_EMAIL = r"{EMAIL_HOST_USER}@naver.com"
